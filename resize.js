@@ -1,51 +1,45 @@
 const sharp = require('sharp')
 
-  (async function () {
-    await sharp('./img/cup.jpg')
-      .resize({
-        width: 1920,
-        height: 1080,
-        fit: sharp.fit.cover
-      })
-      .toFile('./resized/cup-xl.jpg', function (err) {
-        const statusMessage = err ? `` : ``;
-        if (!err) {
-          console.log('cup-xl.jpg is RESIZED!')
-        }
-      })
-      .resize({
-        width: 1200,
-        height: 675,
-        fit: sharp.fit.cover
-      })
-      .toFile('./resized/cup-l.jpg', function (err) {
-        const statusMessage = err ? `` : ``;
-        if (!err) {
-          console.log('cup-l.jpg is RESIZED!')
-        }
-      })
-      .resize({
-        width: 900,
-        height: 506,
-        fit: sharp.fit.cover
-      })
-      .toFile('./resized/cup-m.jpg', function (err) {
-        const statusMessage = err ? `` : ``;
-        if (!err) {
-          console.log('cup-m.jpg is RESIZED!')
-        }
-      })
-      .resize({
-        width: 600,
-        height: 1066,
-        fit: sharp.fit.cover
-      })
-      .toFile('./resized/cup-s.jpg', function (err) {
-        const statusMessage = err ? `` : ``;
-        if (!err) {
-          console.log('cup-s.jpg is RESIZED!')
-        }
-      })
-  })();
+const imageList = [
+  'cup',
+  'logo'
+]
 
+class ResizeOption {
+  constructor(width, height, suffix, pxDensity) {
+    this.width = width
+    this.height = height
+    this.suffix = suffix
+    this.pxDensity = pxDensity
+    this.fit = sharp.fit.cover
+  }
+}
 
+const sizeList = [
+  new ResizeOption(3600, 2250, 'desk', '2x'),
+  new ResizeOption(2400, 1800, 'tbls', '2x'),
+  new ResizeOption(1800, 2400, 'tbpt', '2x'),
+  new ResizeOption(1200, 2133, 'phon', '2x'),
+  new ResizeOption(1800, 1125, 'desk', '1x'),
+  new ResizeOption(1200, 900, 'tbls', '1x'),
+  new ResizeOption(900, 1200, 'tbpt', '1x'),
+  new ResizeOption(600, 1066, 'phon', '1x'),
+]
+
+function performResize({ sharpInstance, sizeList, img }) {
+  sizeList.forEach(async (item) => {
+    await sharpInstance.resize(item)
+            .toFile(`./resized/${img}-${item.suffix}_${item.pxDensity}.jpg`, err => {
+              !err && console.log(`${img}-${item.suffix}_${item.pxDensity}.jpg is RESIZED`)
+            })
+  })
+}
+
+function start(imageList, sizeList) {
+  imageList.forEach(img => {
+    const sharpInstance = sharp(`./img/${img}.jpg`)
+    performResize({ sharpInstance, sizeList, img })
+  })
+}
+
+start(imageList, sizeList)

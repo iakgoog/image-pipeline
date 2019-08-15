@@ -10,6 +10,8 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "imagemin-jpeg-recompress": "^6.0.0",
+    "imagemin-jpegtran": "^6.0.0",
     "sharp": "^0.23.0"
   },
   "devDependencies": {

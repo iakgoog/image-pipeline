@@ -2,3 +2,4 @@ node_modules
 build
 resized
 package-lock.json
+.DS*
